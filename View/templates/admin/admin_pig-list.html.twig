@@ -1,0 +1,72 @@
+{% extends 'admin/admin_base.html.twig' %} 
+
+{% block title %}Liste des cochons{% endblock %}
+
+
+{% block content %}
+<a class="btn btn-primary" href="index.php?rub=admin_pig-add" role="button">Ajouter un cochon</a>
+<br>
+Afficher : &nbsp;
+<select id="sexe">
+    <option value="tous" {% if sexe=='tous' %} selected {% endif %}>tous</option>
+    <option value="male" {% if sexe=='male' %} selected {% endif %}>mâle</option>
+    <option value="femelle" {% if sexe=='nom' %} selected {% endif %}>femelle</option>
+</select>
+&nbsp;
+ordonné(e)s par :
+<select id="ordre">
+    <option value="nom" {% if ordre=='nom' %} selected {% endif %}>nom</option>
+    <option value="poids" {% if ordre=='poids' %} selected {% endif %}>poids</option>
+    <option value="date_naiss" {% if ordre=='date_naiss' %} selected {% endif %}>date de naissance</option>
+</select>
+
+Sens : 
+<select id="sens">
+    <option value="asc" {% if sens == 'asc' %} selected {% endif %}>du plus petit au plus grand</option>
+    <option value="desc" {% if sens == 'desc' %} selected {% endif %}>du plus grand au plus petit</option>
+</select>
+Nombre d'élements par page : {{nb_elements}}
+<select id="nb-elements">
+{% for cpt_page in 0..20 %}
+    <option value="{{ cpt_page}}" {% if nb_elements == cpt_page %} selected {% endif %}>{{cpt_page}}</option>
+{% endfor %}
+</select>
+<a class="btn btn-info" onClick="Afficher()" role="button">Afficher !</a>
+
+
+<h1>Liste des cochons</h1>
+<h2>{{ nb_cochons + nb_cochonnes }} cochons au total dont : 
+{{ nb_cochonnes }} cochonnes et {{ nb_cochons }} cochons</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th colspan="2">Action</th>
+            <th>N°</th>
+            <th>Nom</th>
+            <th>Sexe</th>
+            <th>Poids</th>
+            <th>Date de naissance</th>
+            <th>Durée de vie</th>
+            <th>Mère</th>
+            <th>Père</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+
+{% for cochon in cochons %}
+    <tr>
+        <td><a class="btn btn-warning" href="index.php?rub=admin_pig-update&pig={{ cochon.id }}" alt="Modifier ce cochon" title="Modifier ce cochon">M</a></td>
+        <td><a class="btn btn-danger" href="index.php?rub=admin_pig-delete&pig={{ cochon.id }}" alt="Supprimer ce cochon" title="Supprimer ce cochon">S</a></td>
+        <td>{{ cochon.id }}</td>
+        <td>{{ cochon.nom }} </td>
+        <td>{{ cochon.sexe }}</td>
+        <td>{{ cochon.poids }}</td>
+        <td>{{ cochon.date_naiss}}</td>
+        <td>{{ cochon.duree_de_vie}}</td> 
+        <td>{{ cochon.mere }}</td>       
+        <td>{{ cochon.pere }}</td>        
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}

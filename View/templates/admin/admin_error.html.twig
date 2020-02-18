@@ -1,0 +1,10 @@
+{% extends 'admin/admin_base.html.twig' %} 
+
+{% block title %}Administration - erreur{% endblock %}
+
+{% block content %}
+    <h1>Administration du site</h1>
+        {% if type=="delete" %}
+        La suppression de l'élement ne s'est pas correctement passé
+    {% endif %}
+{% endblock %}

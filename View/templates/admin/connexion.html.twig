@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<HTML>
+    <HEAD>
+        <title>Administration</title>
+        <meta charset="UTF-8">
+        <script src="public/js/function.js"></script>
+    </HEAD>
+    <body>
+        <div id="container">
+            <form action="index.php?rub=admin_verif" method="POST">
+                <table id="tableau">
+                    <tr>
+                        <td colspan="2"><span class="title">Connexion</span></td>
+                    </tr>
+                    <tr>
+                        <td><label for="identifiant">Identifiant</label></td>
+                        <td><input type="text" id="identifiant" name="login"><td>
+                    </tr>
+                    <tr>
+                        <td><label for="mdp">Mot de passe : </label></td>
+                        <td><input type="password" name="mdp"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><input id="btn_valider" type="submit" value="Valider"/>
+                    </tr>
+                </table>
+            </form>
+        </div>   
+         <link href="public/css/style_admin.css" rel="stylesheet"/>
+    </body>
+</HTML>

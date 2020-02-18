@@ -1,0 +1,39 @@
+footer{
+    position: fixed;
+    background-color: lightpink;
+    height:5%;
+    text-align: center;
+    font-weight: bold;
+    top:95%;
+    width: 100%;
+}
+
+.fondRose{
+    background-color: lightpink;
+}
+
+.contour {
+    border:2px solid red;
+}
+
+.onglet_accueil{
+    width:300;
+}
+
+.slider{
+    height: 400px;
+}
+
+.espace{
+    height:100;
+}
+
+.titre{
+    font-style: italic;
+}
+
+#news{
+    text-align :"center";
+    font-weight: "bold";
+    
+}

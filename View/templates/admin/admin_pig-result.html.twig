@@ -1,0 +1,33 @@
+{% extends 'admin/admin_base.html.twig' %} 
+
+{% block title %}Résultat{% endblock %}
+
+{% block content %}
+    {% if (type == "delete") %}
+    
+        {% if (value == "ok") %}
+            La suppression s'est correctement effectuée!<br/>
+        {% else %}
+            Il y a eu un soucis durant la suppression<br/>
+        {% endif %}
+    
+    {% elseif type == "add" %}
+    
+            {% if (value == "ok") %}
+                Le cochon a été correctement ajouté.<br/>
+            {% else %}
+                Il y a eu une erreur durant l'ajout<br/>
+            {% endif %}
+
+    {% elseif type == "update" %}
+    
+            {% if (value == "ok") %}
+                Le cochon a été correctement mise à jour.<br/>
+            {% else %}
+                Il y a eu une erreur durant la mise à jour.<br/>
+            {% endif %}
+
+    {% endif %}
+
+    <a href="index.php?rub=admin_pig-list">Retour à la liste.</a>
+{% endblock %}

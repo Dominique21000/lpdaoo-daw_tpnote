@@ -1,0 +1,89 @@
+{% extends 'admin/admin_base.html.twig' %} 
+
+{% block title %}Ajout d'un cochon{% endblock %}
+
+{% block content %}
+<a class="btn btn-info" href="index.php?rub=admin_pig-list" role="button">Retour à la liste des cochon</a>
+{% if id < 0 %}
+<h1>Ajout d'un cochon</h1>
+<form action="index.php?rub=admin_pig-add-base" method="post">
+{% else %}
+ <h1>Modification du cochon n° {{id }}</h1>
+<form action="index.php?rub=admin_pig-update-base" method="post">
+
+ {% endif %}
+
+    <table class="table">
+    {% set id = 0 %}
+    {% set nom = "" %}
+    {% set poids = 0 %}
+    {% set date_naiss = "" %}
+    {% set duree_de_vie = 0 %}
+    {% set sexe = "" %}
+    {% set mere = "" %}
+    {% set pere = "" %}
+        
+    {% for p in pig   %}
+        {% set id = p.coc_id %}
+        {% set nom = p.coc_nom %}
+        {% set poids = p.coc_poids %} 
+        {% set date_naiss = p.coc_date_naiss %} 
+        {% set sexe = p.coc_sexe %}
+        {% set duree_de_vie = p.coc_duree_de_vie %}
+        {% set mere = p.coc_mere_id %}
+        {% set pere = p.coc_pere_id %}
+    {% endfor %}
+    <input type="hidden" name="id" value="{{id }}"/>
+        <tr>
+            <th><label for="nom">Nom : </label></th>
+            <td><input type="text" name="nom" required value="{{ nom }}"></td>
+        </tr>
+        <tr>
+            <th>Poids (en g) : </th>
+            <td><input type="number" min="0" name="poids" value="{{ poids}}"></td>
+        </tr>
+        <tr>
+            <th>Date de naissance : </th>
+            <td><input type="date-time-local" name="date_naiss" value="{{ date_naiss}}"></td>
+        </tr>
+        <tr>
+            <th>Sexe : </th>
+            <td>
+                <select name="sexe">
+                    <option value="Femelle" {% if sexe == "Femelle" %} selected {% endif %}>Femelle</option>
+                    <option value="Mâle" {% if sexe == "Mâle" %} selected {% endif %}>Mâle</option>
+                </select>
+            </td>
+        <tr>
+            <th>Durée de vie : </th>
+            <td><input type="number" min="0" name="duree_de_vie" value="{{ duree_de_vie }}"></td>
+        </tr>
+        <tr>
+            <th>Mère : </th>
+            <td>{{mere}}
+                <select id="mere" name="mere">
+            {% for w in womens %}
+                <option value="{{ w.coc_id }}" {% if (w.coc_id == mere) %} selected {% endif %}>{{ w.coc_nom }}</option>
+            {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>Père : </th>
+            <td>{{pere}}
+                <select id="pere" name="pere">
+                {% for m in mens %}
+                    <option value="{{ m.coc_id }}" {% if m.coc_id == pere %} selected {% endif %}>{{ m.coc_nom }}</option>
+                {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="text-center"><input type="submit" name="btn_valder"></td>
+        </tr>        
+    </table>
+</form>
+{%endblock%}
