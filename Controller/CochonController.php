@@ -1,7 +1,7 @@
 <?php
 
-require_once 'Model\Database.php';
-require_once 'Model\CochonBase.php';
+require_once 'Model/Database.php';
+require_once 'Model/CochonBase.php';
 
 class CochonController{
 

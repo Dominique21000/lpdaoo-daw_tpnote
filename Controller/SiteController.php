@@ -3,7 +3,7 @@
 //namespace Controller;
 
 require_once 'vendor/autoload.php';
-require_once 'Model\Database.php';
+require_once 'Model/Database.php';
 require_once 'CochonController.php';
 //use Database;
 
@@ -50,7 +50,7 @@ class SiteController {
             echo "Echec de connexion";
         }   
         else {
-            $o_rp = $o_conn->prepare("SELECT * FROM user where use_email =:login and use_mdp =:mdp");
+            $o_rp = $o_conn->prepare("SELECT * FROM user where use_login =:login and use_mdp =:mdp;");
             $o_rp->bindParam(':login', $user);
             $o_rp->bindParam(':mdp' , $mdp);
 
