@@ -17,7 +17,7 @@ class Photo
         {
             print("ok 1 ?");
                 if ((is_uploaded_file($tFile[$name]['tmp_name'])))
-            {
+                {
                 print("ok...");
                 // le fichier a bien été uploadé
                 $uploadOk = 1;
