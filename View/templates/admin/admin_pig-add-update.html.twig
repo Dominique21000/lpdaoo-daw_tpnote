@@ -6,13 +6,13 @@
 <a class="btn btn-info" href="index.php?rub=admin_pig-list" role="button">Retour à la liste des cochon</a>
 {% if id < 0 %}
 <h1>Ajout d'un cochon</h1>
-<form action="index.php?rub=admin_pig-add-base" method="post">
+<form action="index.php?rub=admin_pig-add-base" method="post" enctype="multipart/form-data">
 {% else %}
  <h1>Modification du cochon n° {{id }}</h1>
-<form action="index.php?rub=admin_pig-update-base" method="post">
+<form action="index.php?rub=admin_pig-update-base" method="post" enctype="multipart/form-data">
 
  {% endif %}
-
+    <input type="hidden" name="id" value="{{id }}">
     <table class="table">
     {% set id = 0 %}
     {% set nom = "" %}
@@ -33,21 +33,21 @@
         {% set mere = p.coc_mere_id %}
         {% set pere = p.coc_pere_id %}
     {% endfor %}
-    <input type="hidden" name="id" value="{{id }}"/>
+    
         <tr>
-            <th><label for="nom">Nom : </label></th>
+            <th><label for="nom">Nom</label></th>
             <td><input type="text" name="nom" required value="{{ nom }}"></td>
         </tr>
         <tr>
-            <th>Poids (en g) : </th>
+            <th>Poids (en g)</th>
             <td><input type="number" min="0" name="poids" value="{{ poids}}"></td>
         </tr>
         <tr>
-            <th>Date de naissance : </th>
+            <th>Date de naissance</th>
             <td><input type="date-time-local" name="date_naiss" value="{{ date_naiss}}"></td>
         </tr>
         <tr>
-            <th>Sexe : </th>
+            <th>Sexe</th>
             <td>
                 <select name="sexe">
                     <option value="Femelle" {% if sexe == "Femelle" %} selected {% endif %}>Femelle</option>
@@ -55,12 +55,12 @@
                 </select>
             </td>
         <tr>
-            <th>Durée de vie : </th>
+            <th>Durée de vie</th>
             <td><input type="number" min="0" name="duree_de_vie" value="{{ duree_de_vie }}"></td>
         </tr>
         <tr>
-            <th>Mère : </th>
-            <td>{{mere}}
+            <th>Mère</th>
+            <td>
                 <select id="mere" name="mere">
             {% for w in womens %}
                 <option value="{{ w.coc_id }}" {% if (w.coc_id == mere) %} selected {% endif %}>{{ w.coc_nom }}</option>
@@ -69,8 +69,8 @@
             </td>
         </tr>
         <tr>
-            <th>Père : </th>
-            <td>{{pere}}
+            <th>Père</th>
+            <td>
                 <select id="pere" name="pere">
                 {% for m in mens %}
                     <option value="{{ m.coc_id }}" {% if m.coc_id == pere %} selected {% endif %}>{{ m.coc_nom }}</option>
@@ -79,6 +79,46 @@
             </td>
         </tr>
         <tr>
+            <th>Photo principale</th>
+            <td><input type="file" id="picture_1" name="picture_1" accept="image/png, image/jpeg">           </td>
+        </tr>
+        <tr>
+            <th>Titre</th>
+            <td><input type="text" name="titre_1"/></td>
+        </tr>
+        <tr>
+            <th>Photo 2</th>
+            <td><input type="file" id="picture_2" name="picture_2" accept="image/png, image/jpeg">           </td>
+        </tr>
+        <tr>
+            <th>Titre de la photo 2</th>
+            <td><input type="text" name="titre_2"/></td>
+        </tr>
+        <tr>
+            <th>Photo 3</th>
+            <td><input type="file" id="picture_3" name="picture_3" accept="image/png, image/jpeg">           </td>
+        </tr>
+        <tr>
+            <th>Titre de la photo 3</th>
+            <td><input type="text" name="titre_3"/></td>
+        </tr>
+        <tr>
+            <th>Photo 4</th>
+            <td><input type="file" id="picture_4" name="picture_4" accept="image/png, image/jpeg">           </td>
+        </tr>
+        <tr>
+            <th>Titre de la photo 4</th>
+            <td><input type="text" name="titre_4"/></td>
+        </tr>
+        <tr>
+            <th>Photo 5</th>
+            <td><input type="file" id="picture_5" name="picture_5" accept="image/png, image/jpeg">           </td>
+        </tr>
+        <tr>
+            <th>Titre de la photo 5</th>
+            <td><input type="text" name="titre_5"/></td>
+        </tr>
+        <tr>        
             <td colspan="2">&nbsp;</td>
         </tr>
         <tr>

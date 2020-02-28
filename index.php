@@ -48,8 +48,12 @@ if (isset($_GET["rub"])){
             break;
 
         case "admin_pig-add-base":
-            CochonController::addPigBase($_POST);
+            CochonController::addPigBase($_POST, $_FILES);
             break;
+
+        case "admin_pig-create":
+            CochonController::createPigBase();
+        break;
 
         case "admin_pig-delete":
             CochonController::askDeletePig($_GET);

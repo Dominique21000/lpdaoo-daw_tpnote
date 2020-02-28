@@ -5,12 +5,14 @@
 
 {% block content %}
 <a class="btn btn-primary" href="index.php?rub=admin_pig-add" role="button">Ajouter un cochon</a>
+<a class="btn btn-primary" href="index.php?rub=admin_pig-create" role="button">Créer aléatoirement des cochons</a>
 <br>
+
 Afficher : &nbsp;
 <select id="sexe">
     <option value="tous" {% if sexe=='tous' %} selected {% endif %}>tous</option>
     <option value="male" {% if sexe=='male' %} selected {% endif %}>mâle</option>
-    <option value="femelle" {% if sexe=='nom' %} selected {% endif %}>femelle</option>
+    <option value="femelle" {% if sexe=='femelle' %} selected {% endif %}>femelle</option>
 </select>
 &nbsp;
 ordonné(e)s par :
@@ -26,12 +28,12 @@ Sens :
     <option value="desc" {% if sens == 'desc' %} selected {% endif %}>du plus grand au plus petit</option>
 </select>
 Nombre d'élements par page : {{nb_elements}}
-<select id="nb-elements">
+<select id="nb_epp">
 {% for cpt_page in 0..20 %}
-    <option value="{{ cpt_page}}" {% if nb_elements == cpt_page %} selected {% endif %}>{{cpt_page}}</option>
+    <option value="{{ cpt_page}}" {% if nb_epp == cpt_page %} selected {% endif %}>{{cpt_page}}</option>
 {% endfor %}
 </select>
-<a class="btn btn-info" onClick="Afficher()" role="button">Afficher !</a>
+<a class="btn btn-info" onClick="Afficher(1)" role="button">Afficher !</a>
 
 
 <h1>Liste des cochons</h1>
@@ -44,9 +46,10 @@ Nombre d'élements par page : {{nb_elements}}
             <th>N°</th>
             <th>Nom</th>
             <th>Sexe</th>
-            <th>Poids</th>
+            <th>Poids en kg</th>
             <th>Date de naissance</th>
-            <th>Durée de vie</th>
+            <th>Durée de vie (en jour)</th>
+            <th>Décès prévu le</th>
             <th>Mère</th>
             <th>Père</th>
             
@@ -57,16 +60,26 @@ Nombre d'élements par page : {{nb_elements}}
 {% for cochon in cochons %}
     <tr>
         <td><a class="btn btn-warning" href="index.php?rub=admin_pig-update&pig={{ cochon.id }}" alt="Modifier ce cochon" title="Modifier ce cochon">M</a></td>
-        <td><a class="btn btn-danger" href="index.php?rub=admin_pig-delete&pig={{ cochon.id }}" alt="Supprimer ce cochon" title="Supprimer ce cochon">S</a></td>
+        <td><a class="btn btn-danger" href="index.php?rub=admin_pig-delete&pig={{ cochon.id }}" alt="Tuer ce cochon" title="Tuer ce cochon">T</a></td>
         <td>{{ cochon.id }}</td>
         <td>{{ cochon.nom }} </td>
         <td>{{ cochon.sexe }}</td>
-        <td>{{ cochon.poids }}</td>
-        <td>{{ cochon.date_naiss}}</td>
-        <td>{{ cochon.duree_de_vie}}</td> 
+        <td>{{ cochon.poids/1000 }} </td>
+        <td>{{ cochon.date_naiss|date("d/m/Y")}}</td>
+        <td>{{ cochon.duree_de_vie}}</td>
+        <td>{{ cochon.date_naiss|date_modify("+ " ~ cochon.duree_de_vie ~ " days")|date("d/m/Y") }}</td> 
         <td>{{ cochon.mere }}</td>       
         <td>{{ cochon.pere }}</td>        
     </tr>
 {% endfor %}
 </table>
+<br/>
+
+{% if (nb_pages > 1)  %}
+    {% for cpt in 1..nb_pages %}
+    <a class="btn btn-info" onClick="Afficher({{ cpt }})" role="button">{{ cpt }}</a>
+    {% endfor %}
+{% endif %}
+
+<script src="public/js/function_liste.js"></script>
 {% endblock %}
