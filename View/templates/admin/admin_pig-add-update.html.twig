@@ -19,6 +19,7 @@
     {% set poids = 0 %}
     {% set date_naiss = "" %}
     {% set duree_de_vie = 0 %}
+    {% set description = "" %} 
     {% set sexe = "" %}
     {% set mere = "" %}
     {% set pere = "" %}
@@ -32,6 +33,8 @@
         {% set duree_de_vie = p.coc_duree_de_vie %}
         {% set mere = p.coc_mere_id %}
         {% set pere = p.coc_pere_id %}
+        {% set description = p.coc_description %}
+
     {% endfor %}
     
         <tr>
@@ -55,9 +58,12 @@
                 </select>
             </td>
         <tr>
-            <th>Durée de vie</th>
+            <th>Durée de vie (en jours)</th>
             <td><input type="number" min="0" name="duree_de_vie" value="{{ duree_de_vie }}"></td>
         </tr>
+        <tr>
+            <th>Description</th>
+            <td><textarea name="description" cols="75" resizable=true>{{description}}</textarea></td>
         <tr>
             <th>Mère</th>
             <td>
@@ -78,46 +84,84 @@
                 </select>
             </td>
         </tr>
+       
+        {% set cpt_photo = 1 %}
+
+    {% if id > 0 %}
+        {% for pic in pictures %}
+        
         <tr>
-            <th>Photo principale</th>
-            <td><input type="file" id="picture_1" name="picture_1" accept="image/png, image/jpeg">           </td>
+            <th>
+                {% if cpt_photo == 1 %}
+                    "Grande" image
+                {% else %}
+                    Miniature {{ cpt_photo-1}} 
+                {% endif %}
+            </th>
+            <td>
+                <div id="titre_block" style="float:left">Photo actuelle<br/>
+                    <img src="public/img/photo/{{ pic.pho_fichier}}" width="100"/>
+                </div>
+                <input type="hidden" name="id_{{cpt_photo}}" value="{{pic.pho_id}}"/>
+                <input type="file" id="picture_{{ cpt_photo }}" name="picture_{{ cpt_photo}}" accept="image/png, image/jpeg">
+            </td>
         </tr>
         <tr>
-            <th>Titre</th>
+            <th>Titre 
+                 {% if cpt_photo == 1 %}
+                    "grande" image
+                {% else %}
+                    miniature {{ cpt_photo-1}} 
+                {% endif %}
+            </th>
+            <td><input type="text" name="titre_{{cpt_photo}}" value="{{ pic.pho_titre}}"/></td>
+        </tr>
+      
+            {% set cpt_photo = cpt_photo + 1 %}
+            {% endfor %}
+        {% else %}
+        <tr>
+            <th>"Grand" image</th>
+            <td><input type="file" id="picture_1" name="picture_1" accept="image/png, image/jpeg" required>           </td>
+        </tr>
+        <tr>
+            <th>Titre de la "grand image"</th>
             <td><input type="text" name="titre_1"/></td>
         </tr>
         <tr>
-            <th>Photo 2</th>
-            <td><input type="file" id="picture_2" name="picture_2" accept="image/png, image/jpeg">           </td>
+            <th>Miniature 1</th>
+            <td><input type="file" id="picture_2" name="picture_2" accept="image/png, image/jpeg" required>
+            </td>
         </tr>
         <tr>
-            <th>Titre de la photo 2</th>
+            <th>Titre de la miniature 1</th>
             <td><input type="text" name="titre_2"/></td>
         </tr>
         <tr>
-            <th>Photo 3</th>
-            <td><input type="file" id="picture_3" name="picture_3" accept="image/png, image/jpeg">           </td>
+            <th>Miniature 2</th>
+            <td><input type="file" id="picture_3" name="picture_3" accept="image/png, image/jpeg" required>           </td>
         </tr>
         <tr>
-            <th>Titre de la photo 3</th>
+            <th>Titre de la miniature 2</th>
             <td><input type="text" name="titre_3"/></td>
         </tr>
         <tr>
-            <th>Photo 4</th>
-            <td><input type="file" id="picture_4" name="picture_4" accept="image/png, image/jpeg">           </td>
+            <th>Miniature 3</th>
+            <td><input type="file" id="picture_4" name="picture_4" accept="image/png, image/jpeg" required>           </td>
         </tr>
         <tr>
-            <th>Titre de la photo 4</th>
+            <th>Titre de la miniature 3</th>
             <td><input type="text" name="titre_4"/></td>
         </tr>
         <tr>
-            <th>Photo 5</th>
-            <td><input type="file" id="picture_5" name="picture_5" accept="image/png, image/jpeg">           </td>
+            <th>Miniature 4</th>
+            <td><input type="file" id="picture_5" name="picture_5" accept="image/png, image/jpeg" required>           </td>
         </tr>
         <tr>
-            <th>Titre de la photo 5</th>
+            <th>Titre de la miniature 4</th>
             <td><input type="text" name="titre_5"/></td>
         </tr>
+		{% endif %}
         <tr>        
             <td colspan="2">&nbsp;</td>
         </tr>

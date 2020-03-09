@@ -22,7 +22,7 @@ class Database
     // stockage de la connexion
     function makeConnect()
     {
-        $dsn = 'mysql:host='. $this->host.';dbname=' . $this->baseName . ";charset=UTF8";
+        $dsn = 'mysql:host='. $this->hostName. ';dbname=' . $this->baseName . ";charset=UTF8";
         try {
             $this->connection = new PDO($dsn, $this->baseUser, $this->userPassW);
         } catch (PDOException $e) {

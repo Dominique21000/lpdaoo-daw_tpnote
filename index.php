@@ -17,14 +17,14 @@ if (isset($_GET["rub"])){
     $rubrique = strtolower($_GET["rub"]);
     switch($rubrique)
     {
-        case "organigramme":
-            SiteController::afficherOrganigramme($_GET);
-            break;    
-        case "news":
-            ArticleController::afficherArticlesActifs($_GET); 
+        case "societe":
+            SiteController::displayFirm($_GET);
+            break;
+        case "contact":
+            SiteController::displayContact($_GET); 
             break;
 
-            // la partie admin
+        // la partie admin
         case "admin":
             SiteController::afficherPageConnexion($_GET);
             break;
@@ -51,9 +51,9 @@ if (isset($_GET["rub"])){
             CochonController::addPigBase($_POST, $_FILES);
             break;
 
-        case "admin_pig-create":
-            CochonController::createPigBase();
-        break;
+        case "admin_pig-create-random":
+            CochonController::createRandomPigs($_GET);
+            break;      
 
         case "admin_pig-delete":
             CochonController::askDeletePig($_GET);
@@ -64,8 +64,13 @@ if (isset($_GET["rub"])){
             break;
 
         case 'admin_pig-update-base':
-            CochonController::updatePig($_POST);
+            CochonController::updatePig($_POST, $_FILES);
             break;
+
+        case "admin_pig-kill":
+            CochonController::killAPig($_GET);
+            break;
+            
         default:
             SiteController::afficherHomePage($_GET);
             break;

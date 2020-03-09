@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title%}Contact{%endblock%}
+
+{%block content%}
+<script src="public/js/formulaire-contact.js"></script>
+<div>
+    <div class="row">
+        <div class="col-lg-12 table-row">
+            <h1>Contact</h1>
+            Nos coordonnées
+            A la cochonnaille de Dijon<br/>
+            5 Rue de Provence</br>
+            67300 Schiltigheim</br>
+            Email : <a href="mailto:dominique21000@gmail.com">dominique21000@gmail.com</a><br/>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-lg-12 table-row">
+            Où sommes-nous ?<br/>
+            <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1k6_ONLEr8IL2DlltGGCDD26hx2NzxLnw" width="400" height="200" resizable></iframe>
+            <br/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 table-row">
+            Vous souhaitez nous envoyer un message ? <br/>
+            <form action="formulaireContact();">
+                Veuillez sélectionner le thème : 
+                <div class="input-group">
+                <select name="themes" id="themes" class="selectpicker" multiple>
+                    <option value="Réserver une carcasse">Réserver une carcasse</option>
+                    <option value="Réserver un cochon vivant">Réserver un cochon vivant</option>
+                    <option value="Vous vendre un cochon">Vous vendre un cochon</option>
+                    <option value="Autres">Autres</option>
+                </select><br/>
+                </div>
+                <div class="input-group">
+                <textarea name="message" id="message" placeholder="Saisissez ici votre message" cols="100"></textarea>
+                </div>
+                <a class="btn btn-info" onClick="formulaireContact()" role="button">Envoyer !</a>
+            </form>
+        </div>
+    </div>
+</div>
+{%endblock%}

@@ -5,7 +5,7 @@
 
 {% block content %}
 <a class="btn btn-primary" href="index.php?rub=admin_pig-add" role="button">Ajouter un cochon</a>
-<a class="btn btn-primary" href="index.php?rub=admin_pig-create" role="button">Créer aléatoirement des cochons</a>
+<a class="btn btn-primary" href="index.php?rub=admin_pig-create-random" role="button">Créer aléatoirement des cochons</a>
 <br>
 
 Afficher : &nbsp;
@@ -42,7 +42,7 @@ Nombre d'élements par page : {{nb_elements}}
 <table class="table table-striped">
     <thead>
         <tr>
-            <th colspan="2">Action</th>
+            <th colspan="3">Action</th>
             <th>N°</th>
             <th>Nom</th>
             <th>Sexe</th>
@@ -50,6 +50,7 @@ Nombre d'élements par page : {{nb_elements}}
             <th>Date de naissance</th>
             <th>Durée de vie (en jour)</th>
             <th>Décès prévu le</th>
+            <th>Etat</th>
             <th>Mère</th>
             <th>Père</th>
             
@@ -60,24 +61,43 @@ Nombre d'élements par page : {{nb_elements}}
 {% for cochon in cochons %}
     <tr>
         <td><a class="btn btn-warning" href="index.php?rub=admin_pig-update&pig={{ cochon.id }}" alt="Modifier ce cochon" title="Modifier ce cochon">M</a></td>
-        <td><a class="btn btn-danger" href="index.php?rub=admin_pig-delete&pig={{ cochon.id }}" alt="Tuer ce cochon" title="Tuer ce cochon">T</a></td>
-        <td>{{ cochon.id }}</td>
+        <td><a class="btn btn-info" href="index.php?rub=admin_pig-kill&pig={{ cochon.id }}" alt="Tuer ce cochon" title="Tuer ce cochon">T</a></td>
+        <td><a class="btn btn-danger" href="index.php?rub=admin_pig-delete&pig={{ cochon.id }}" alt="Supprimer ce cochon" title="Supprimer ce cochon">D</a></td>
+        <td>{{ cochon.id }} - {{cochon.coc_deleted_at}}</td>
         <td>{{ cochon.nom }} </td>
         <td>{{ cochon.sexe }}</td>
         <td>{{ cochon.poids/1000 }} </td>
         <td>{{ cochon.date_naiss|date("d/m/Y")}}</td>
         <td>{{ cochon.duree_de_vie}}</td>
-        <td>{{ cochon.date_naiss|date_modify("+ " ~ cochon.duree_de_vie ~ " days")|date("d/m/Y") }}</td> 
+        <td>{{ cochon.date_naiss|date_modify("+ " ~ cochon.duree_de_vie ~ " day")|date("d/m/Y") }}</td> 
+        
+               {% set difference = (cochon.date_naiss|date_modify("+ " ~ cochon.duree_de_vie ~ " day")|date("m/d/Y"))|time_diff %}
+        <td {% if "in" in difference %} class="btn-success"{%endif%}>
+         
+            {% if "in" in difference %}
+                {% if cochon.sexe == "Mâle" %}
+                    vivant
+                {% else %}
+                    vivante
+                {% endif %}
+
+            {% else %}
+                {% if cochon.sexe =="Mâle" %}
+                    décédé
+                {% else %}
+                    décédée
+                {% endif %}
+            {% endif %} 
+        </td>
         <td>{{ cochon.mere }}</td>       
         <td>{{ cochon.pere }}</td>        
     </tr>
 {% endfor %}
 </table>
 <br/>
-
 {% if (nb_pages > 1)  %}
     {% for cpt in 1..nb_pages %}
-    <a class="btn btn-info" onClick="Afficher({{ cpt }})" role="button">{{ cpt }}</a>
+    <a class="btn {% if cpt==page %} btn-success {% else %} btn-info {%endif%}" onClick="Afficher({{ cpt }})" role="button">{{ cpt }}</a>
     {% endfor %}
 {% endif %}
 

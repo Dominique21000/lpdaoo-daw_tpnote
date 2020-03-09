@@ -2,25 +2,35 @@
 
 {% block title %}Résultat{% endblock %}
 
+
 {% block content %}
+    <h1>Gestion des cochons</h2>
     {% if (type == "delete") %}
-    
+        <h2>Suppression d'un cochon</h2>
         {% if (value == "ok") %}
-            Le cochon a bien été tué !<br/>
+            Le cochon a bien été supprimé de la base !<br/>
         {% else %}
             Il y a eu un soucis durant la suppression<br/>
         {% endif %}
-    
+    {% elseif type == "kill" %}
+        <h2>Abattage d'un cochon</h2>
+        {% if (value == "ok") %}
+            Le cochon a été correctement abattu.<br/>
+        {% else %}
+            Il y a eu une erreur durant l'abattage<br/>
+        {% endif %}
+
+
     {% elseif type == "add" %}
-    
-            {% if (value == "ok") %}
-                Le cochon a été correctement ajouté.<br/>
-            {% else %}
-                Il y a eu une erreur durant l'ajout<br/>
-            {% endif %}
+        <h2>Ajout d'un cochon</h2>
+        {% if (value == "ok") %}
+            Le cochon a été correctement ajouté.<br/>
+        {% else %}
+            Il y a eu une erreur durant l'ajout<br/>
+        {% endif %}
 
     {% elseif type == "add-lot" %}
-    
+        <h2>Ajout d'un cochon</h2>
             {% if (value == "ok") %}
                 Les cochons ont été correctement ajouté.<br/>
             {% else %}
@@ -28,7 +38,7 @@
             {% endif %}
 
     {% elseif type == "update" %}
-    
+        <h2>Mise à jour d'un cochon</h2>
             {% if (value == "ok") %}
                 Le cochon a été correctement mise à jour.<br/>
             {% else %}
