@@ -20,8 +20,17 @@ if (isset($_GET["rub"])){
         case "societe":
             SiteController::displayFirm($_GET);
             break;
+    
         case "contact":
             SiteController::displayContact($_GET); 
+            break;
+
+        case "onglet-1":
+            SiteController::displayOnglet1();
+            break;
+
+        case "onglet-2":
+            SiteController::displayOnglet2();
             break;
 
         // la partie admin

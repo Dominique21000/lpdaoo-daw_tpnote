@@ -48,7 +48,7 @@ class CochonController{
             $nb_pages = (int)($nb_total / $nb_epp); 
         }
         else{
-            $nb_pages = (int)($nb_total / $nb_epp) +1;
+            $nb_pages = (int)($nb_total / $nb_epp);
         }
 
         $debut = 0;
@@ -60,10 +60,13 @@ class CochonController{
         $cochons = $cb->getCochonsActifs($o_conn, $sexeCochon, $ordreCochon, $sens, $nb_epp, $debut);
 
         //return $cochons;
-        $loader = new \Twig\Loader\FilesystemLoader('View/templates');
-        $twig = new \Twig\Environment($loader, [
+        //require_once 'vendor/autoload.php';
+        $loader = new \Twig_Loader_Filesystem('View/templates');
+        $twig = new \Twig_Environment($loader, [
             'cache' => false,
         ]);
+        //use Twig\Extensions\DateExtension;
+        $twig->addExtension(new Twig_Extensions_Extension_Date());
 
       
       
@@ -75,12 +78,13 @@ class CochonController{
                                                              'ordre' => $ordreCochon,
                                                              'sens' => $sens,
                                                              'nb_epp' => $nb_epp,
-                                                             'nb_pages' => $nb_pages, ]
+                                                             'nb_pages' => $nb_pages,
+                                                             'page' => $page ]
                                                             );
     }    
 
 
-    /**  mange the form for adding a pig in the database */
+    /**  manage the form for adding a pig in the database */
     public static function addUpdatePigForm($tabGET){
         
         $o_pdo =  new Database();
@@ -88,27 +92,28 @@ class CochonController{
 
         // get the list of the mothers
         $womens = CochonBase::getWomens($o_conn);
-        //var_dump($mothers);
-        //echo "fin de mothers";
-
+                
         // get the list of the fathers
         $mens = CochonBase::getMens($o_conn);
 
         $id = -1;
         $myPig = [];
+        $pictures = [];
         if (isset($tabGET['pig'])){
             $id = $tabGET['pig'];
 
             // get the details of the cochon
-             // la connexion à la base
-            
+            // la connexion à la base
             $cb = new CochonBase();
             $myPig = $cb->getPig($o_conn, $id);
 
+            // get the list of the pictures
+            $data_pic = array(':coc_id' => $id);
+            $pictures = PhotoBase::getPictures($o_conn, $data_pic);
         }
 
-        $loader = new \Twig\Loader\FilesystemLoader('View/templates');
-        $twig = new \Twig\Environment($loader, [
+        $loader = new \Twig_Loader_FilesystemLoader('View/templates');
+        $twig = new \Twig_Environment($loader, [
             'cache' => false,
         ]);
         echo $twig->render('admin/admin_pig-add-update.html.twig', 
@@ -116,13 +121,12 @@ class CochonController{
                                 'id' => $id,
                                 'pig' => $myPig,
                                 'womens' => $womens,
-                                'mens' => $mens ]);
+                                'mens' => $mens,
+                                'pictures' => $pictures]);
     }
 
-
-
     //****************************************** */
-    // AJOUT //
+    // ADD //
     /** manage the add of a pig in the database */
     public static function addPigBase($tabPost, $tabFile){
         // la connexion à la base
@@ -139,78 +143,64 @@ class CochonController{
             ':poids' => intval($tabPost['poids']),
             ':sexe' => $tabPost['sexe'],
             ':duree_vie' => $tabPost['duree_de_vie'],
-            ':date_naiss' => $tabPost['date_naiss'],           
+            ':date_naiss' => $tabPost['date_naiss'], 
+            ':description' => $tabPost['description'],          
             ':mere' => intval($tabPost['mere']),    
             ':pere' => intval($tabPost['pere']),            
         );
                
         $addCochon = $cb->addPig($o_conn, $data_cochon);
-        //var_dump($addCochon);
         
-        // photo
+        // traitement pour les photos
         $pb = new PhotoBase();
         for ($cpt_photo = 1; $cpt_photo <= 5 ; $cpt_photo ++)
         {
-            //print("<br>" . $cpt_photo."<br>");
             // trt pour chaque photo
             $id_photo = intval($pb->getMaxId($o_conn) +1);
 
             // pour le fichier
-            // pour l'ajout de l'extension
-            //var_dump($tabPost);
-
-            //var_dump($tabFile['picture_1']);
-
-            if ($tabFile['picture_'.$cpt_photo]['type'] == "image/jpeg")        
+            if ($tabFile['picture_'.$cpt_photo]['type'] != "") 
             {
-                $extension = ".jpeg";
+                if ($tabFile['picture_'.$cpt_photo]['type'] == "image/jpeg")        
+                {
+                    $extension = ".jpeg";
+                }
+                if ($tabFile['picture_'.$cpt_photo]['type'] =="image/png"){
+                    $extension = ".png";
+                }
+    
+                $data_photo = array(
+                    ':id' => $id_photo,
+                    ':titre' => $tabPost['titre_' . $cpt_photo],
+                    ':fichier' => $id_photo . $extension,
+                );
+                $n_photo = $pb->addPicture($o_conn, $data_photo);
+               
+                 // lien
+                $lcpb = new LienCochonPhotoBase();
+                $id_lien = intval($lcpb->getMaxId($o_conn) +1);
+                $data_lien = array(
+                    ':id' => $id_lien,
+                    ':coc_id' => $id_cochon,
+                    ':pho_id' => $id_photo, 
+                ); 
+                //var_dump($data_lien);
+                $n_lien = $lcpb->addLink($o_conn, $data_lien);
+                                    
+                // traitement du fichier 
+                Photo::savePhoto($tabFile, 'picture_'. $cpt_photo, $id_photo);
             }
-            if ($tabFile['picture_'.$cpt_photo]['type'] =="image/png"){
-                $extension = ".png";
-            }
-
-            $data_photo = array(
-                ':id' => $id_photo,
-                ':titre' => $tabPost['titre_' . $cpt_photo],
-                ':fichier' => $id_photo . $extension,
-            );
-            //echo "id : ".$id_photo."<br>";
-            //var_dump($data_photo);
-            $n_photo = $pb->addPicture($o_conn, $data_photo);
-            //var_dump($n_photo);
+           
         }
-       
 
-        // lien
-        $lcpb = new LienCochonPhotoBase();
-        $id_lien = intval($lcpb->getMaxId($o_conn) +1);
-        $data_lien = array(
-            ':id' => $id_lien,
-            ':coc_id' => $id_cochon,
-            ':pho_id' => $id_photo, 
-        ); 
-        print("<br>");
-        var_dump($data_lien);
-        $n_lien = $lcpb->addLink($o_conn, $data_lien);
-        print("ok ? <br>");
-        var_dump($n_lien);
-
-
-        $loader = new \Twig\Loader\FilesystemLoader('View/templates');
-        $twig = new \Twig\Environment($loader, [
+        $loader = new \Twig_Loader_FilesystemLoader('View/templates');
+        $twig = new \Twig_Environment($loader, [
             'cache' => false,
         ]);
      
         
-        if ($addCochon == true && $n_photo == true && $n_lien==true)
+        if ($addCochon == true)
         {
-            // traitelent des fichiers
-            Photo::savePhoto($tabFile, 'picture_1', $id);
-            Photo::savePhoto($tabFile, 'picture_2', $id);
-            Photo::savePhoto($tabFile, 'picture_3', $id);
-            Photo::savePhoto($tabFile, 'picture_4', $id);
-            Photo::savePhoto($tabFile, 'picture_5', $id);
-
             // ok
             echo $twig->render('admin/admin_pig-result.html.twig', 
                             ['type' => 'add',
@@ -233,11 +223,9 @@ class CochonController{
         $cb = new CochonBase();
         $p = $cb->getPig($o_conn,$id);
         $nom = $p[0]["coc_nom"];
-        //var_dump($p);
-        //echo "nom : " .$nom;
-
-        $loader = new \Twig\Loader\FilesystemLoader('View/templates');
-        $twig = new \Twig\Environment($loader, [
+       
+        $loader = new \Twig_Loader_Filesystem('View/templates');
+        $twig = new \Twig_Environment($loader, [
             'cache' => false,
         ]);
       
@@ -255,8 +243,8 @@ class CochonController{
         $o_conn = $o_pdo->makeConnect();
         $cb = new CochonBase();
 
-        $loader = new \Twig\Loader\FilesystemLoader('View/templates');
-        $twig = new \Twig\Environment($loader, [
+        $loader = new \Twig_Loader_Filesystem('View/templates');
+        $twig = new \Twig_Environment($loader, [
             'cache' => false,
             ]);
 
@@ -275,13 +263,14 @@ class CochonController{
     }
 
     /** update of the database with the new information */
-    public static function updatePig($tabPost){
-        $data = array(
+    public static function updatePig($tabPost,$tabFile){
+        $data_pig = array(
             ':id' => $tabPost['id'],
             ':nom' => $tabPost['nom'],
             ':poids' => $tabPost['poids'],
             ':duree_vie' => $tabPost['duree_de_vie'],
             ':date_naiss' => $tabPost['date_naiss'],
+            ':description' => $tabPost['description'],
             ':sexe' => $tabPost['sexe'],
             ':mere' => $tabPost['mere'],    
             ':pere' => $tabPost['pere'],            
@@ -290,12 +279,63 @@ class CochonController{
         // la connexion à la base
         $o_pdo =  new Database();
         $o_conn = $o_pdo->makeConnect();
-        $cb = new CochonBase();
-        $updtPig = $cb->updatePig($o_conn, $data);
-        var_dump($updtPig);
 
-        $loader = new \Twig\Loader\FilesystemLoader('View/templates');
-        $twig = new \Twig\Environment($loader, [
+        // for the pig
+        $cb = new CochonBase();
+        $updtPig = $cb->updatePig($o_conn, $data_pig);
+        
+        // for the pictures
+        // get the data of the pictures
+        $data_pic = array(':coc_id' => $tabPost['id']);
+        $pict = PhotoBase::getPictures($o_conn, $data_pic);
+
+        $pb = new PhotoBase();
+
+        for ($cpt_photo = 1; $cpt_photo <= 5 ; $cpt_photo ++)
+        {
+            // trt pour chaque photo
+            $id_photo = $tabPost['id_' .$cpt_photo];
+
+            // pour le fichier
+            if ($tabFile['picture_'.$cpt_photo]['type'] != "") 
+            {
+                if ($tabFile['picture_'.$cpt_photo]['type'] == "image/jpeg")        
+                {
+                    $extension = ".jpeg";
+                }
+                if ($tabFile['picture_'.$cpt_photo]['type'] =="image/png"){
+                    $extension = ".png";
+                }
+    
+                $data_photo = array(
+                    ':id' => $id_photo,
+                    ':titre' => $tabPost['titre_' . $cpt_photo],
+                    ':fichier' => $id_photo . $extension,
+                );
+                $u_photo = $pb->updatePicture($o_conn, $data_photo);
+                
+                // lien
+                /*
+                $lcpb = new LienCochonPhotoBase();
+                $data_lien = array(
+                    ':id' => $id_lien,
+                    ':coc_id' => $id_cochon,
+                    ':pho_id' => $id_photo, 
+                ); 
+                //var_dump($data_lien);
+                $n_lien = $lcpb->addLink($o_conn, $data_lien);
+                //print("ok ? <br>");
+                var_dump($n_lien);
+                //print("id_photo" . $id_photo);
+                */    
+                // traitement du fichier 
+                Photo::savePhoto($tabFile, 'picture_'. $cpt_photo, $id_photo);
+            }
+        }
+
+        // envoi du rendu
+        $loader = new \Twig_Loader_FilesystemLoader('View/templates');
+        $twig = new \Twig_Environment($loader, [
             'cache' => false,
         ]);
      
@@ -317,7 +357,7 @@ class CochonController{
      * on prend un tableau de prénom
      * on choisit ensuite les élements de façons aléatoires
      */
-    public static function createPigBase(){
+    public static function createRandomPigs(){
         // la connexion à la base
         $o_pdo =  new Database();
         $o_conn = $o_pdo->makeConnect();
@@ -338,48 +378,61 @@ class CochonController{
         $tabSexe = array(0 => "Femelle",
                         1 => "Mâle");
 
+    
+        $tabDescription = array(0 => "Naissance douloureuse, un peu fragile...à surveiller",
+                                1 => "Un bon gros cochon, rien de spécial à signaler",
+                                2 => "Un cochon dans la moyenne. Surveillance normale",
+                                3 => "Un gros cochon né difficilement. Poids à surveiller");
 
         // genration des cochons             
         for ($cpt_cochons = 1; $cpt_cochons <= 10; $cpt_cochons ++){
-            $sexe = $tabSexe[random_int(0,count($tabSexe)-1)];
-        if ($sexe == "Mâle"){
-            $prenom = $prenom_masculin[ random_int(0,count($prenom_masculin) -1)] ;
-        }
-        else{
-            $prenom = $prenom_feminin [ random_int(0,count($prenom_feminin) -1) ];
-        }
-        
-        // generation de la date de naissance
-        $annee = random_int(1960, 2019);
-        $mois = random_int(1,12);
-        $jour = random_int(1, 28);
-        $heure = random_int(0,23);
-        $min = random_int(0, 59);
-        $sec = random_int(0, 59);
-        $date_naissance = $annee . "-" . $mois . "-" . $jour . " " .$heure . ":" . $min . ":" . $sec;
-        
-        $mere = random_int( 0, count( $cb->getIdCochonnes($o_conn)) );
-        $pere = random_int(0, count($cb->getIdCochons($o_conn)));
-        
-        $poids = random_int(250000, 360000);
-        
 
-        $duree_vie = random_int(15*365, 20*365);
-        
-        // add of the pig in the db
-        $data = array(':nom'=> $prenom,
-                     ':poids'=>$poids,
-                     ':sexe' => $sexe, 
-                     ':duree_vie' => $duree_vie, 
-                     ':date_naiss' => $date_naissance, 
-                     ':pere' =>$pere,
-                     ':mere' => $mere);
-        $retour = $cb->addPig($o_conn, $data);        
+            // trt for the id
+            $id_cochon = CochonBase::getMaxId($o_conn)+1;
+
+                $sexe = $tabSexe[random_int(0,count($tabSexe)-1)];
+            if ($sexe == "Mâle"){
+                $prenom = $prenom_masculin[ random_int(0,count($prenom_masculin) -1)] ;
+            }
+            else{
+                $prenom = $prenom_feminin [ random_int(0,count($prenom_feminin) -1) ];
+            }
+
+            $description = $tabDescription[random_int(0, count($tabDescription)-1)];
+            
+            // generation de la date de naissance
+            $annee = random_int(1960, 2019);
+            $mois = random_int(1,12);
+            $jour = random_int(1, 28);
+            $heure = random_int(0,23);
+            $min = random_int(0, 59);
+            $sec = random_int(0, 59);
+            $date_naissance = $annee . "-" . $mois . "-" . $jour . " " .$heure . ":" . $min . ":" . $sec;
+            
+            $mere = random_int( 0, count( $cb->getIdCochonnes($o_conn)) );
+            $pere = random_int(0, count($cb->getIdCochons($o_conn)));
+            
+            $poids = random_int(250000, 360000);
+            
+
+            $duree_vie = random_int(15*365, 20*365);
+            
+            // add of the pig in the db
+            $data = array(':id' => $id_cochon,
+                        ':nom'=> $prenom,
+                        ':poids'=>$poids,
+                        ':sexe' => $sexe, 
+                        ':duree_vie' => $duree_vie, 
+                        ':date_naiss' => $date_naissance,
+                        ':description' => $description, 
+                        ':pere' =>$pere,
+                        ':mere' => $mere);
+            $retour = $cb->addPig($o_conn, $data);        
         }   
         
         // renvoi de la réponse
-        $loader = new \Twig\Loader\FilesystemLoader('View/templates');
-        $twig = new \Twig\Environment($loader, [
+        $loader = new \Twig_Loader_Filesystem('View/templates');
+        $twig = new \Twig_Environment($loader, [
             'cache' => false,
         ]);
         if ($retour == 1){
@@ -393,6 +446,41 @@ class CochonController{
                             ['type' => 'add-lot',
                             'value'=> 'erreur']);   
         }
-
     } 
+
+    /** kill a pig : 
+     * - keep it in the db
+    */
+    public static function killAPig($tabGET){
+        $id_cochon = $tabGET['pig'];
+        
+        // pour ce faire, on va fixer la durée de vie 
+        // à la durée entre sa date de naissance et maintenant
+        $o_pdo =  new Database();
+        $o_conn = $o_pdo->makeConnect();
+        $cb = new CochonBase();    
+        $data = array(':id' => $id_cochon);
+        
+        //var_dump($data);
+        $kill = $cb->updateDdV($o_conn, $data);
+        //var_dump($kill);
+
+        // renvoi de la réponse
+        $loader = new \Twig_Loader_Filesystem('View/templates');
+        $twig = new \Twig_Environment($loader, [
+            'cache' => false,
+        ]);
+        if ($kill == 1){
+            echo $twig->render('admin/admin_pig-result.html.twig', 
+            ['type' => 'kill',
+            'value' => 'ok']);
+        } 
+        else{
+            // erreur
+            echo $twig->render('admin/admin_pig-result.html.twig', 
+                            ['type' => 'kill',
+                            'value'=> 'erreur']);   
+        }
+
+    }
 }

@@ -54,6 +54,7 @@
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="categorie1" role="tabpanel" aria-labelledby="categorie1-tab">
+                        <!--<div class="tab-pane fade show active" id="categorie1">-->
                         Contenu de catégorie 1 : 
                         Lorem Elsass ipsum salu risus, Gal. quam. lotto-owe Verdammi kuglopf tchao bissame Miss Dahlias Kabinetpapier sit libero, sed picon bière geïz amet, schnaps hopla hop sit eget rossbolla eleifend s'guelt sed hopla turpis Hans commodo Coopé de Truchtersheim merci vielmols gal auctor, rhoncus quam, Pfourtz ! jetz gehts los Racing. varius morbi météor Oberschaeffolsheim et bredele barapli mamsell Strasbourg wie tellus non adipiscing gewurztraminer Heineken Pellentesque schpeck  id amet leo Wurschtsalad elit tellus geht's libero, condimentum Salu bissame ullamcorper schneck rucksack ch'ai Huguette senectus blottkopf, flammekueche Richard Schirmeck tristique yeuh. semper réchime Salut bisamme ante non nüdle placerat ftomi! kougelhopf DNA, vielmols, gravida libero. sagittis hoplageiss Gal !</div>
                         
@@ -97,4 +98,39 @@
             <div class="row">
                 <div class="col-lg-12">&nbsp;<br/>&nbsp;</div>
             </div>
+            <script>
+                $(function(){
+                    $("#categorie1-tab").on("click",chargeContenu1);
+                    $("#categorie2-tab").on("click",chargeContenu2);
+                });
+
+
+                function chargeContenu1(){
+                    
+                    $.ajax({
+                    type: 'POST',
+                    url: 'index.php?rub=onglet-1',
+                    dataType: 'html',
+                    cache: false,
+                    success: function(data){
+                        $('#categorie1').html(data);
+                        //console.log("succes");
+                        }
+                    });
+                }
+
+                function chargeContenu2(){
+                    
+                    $.ajax({
+                    type: 'POST',
+                    url: 'index.php?rub=onglet-2',
+                    dataType: 'html',
+                    cache: false,
+                    success: function(data){
+                        $('#categorie2').html(data);
+                        //console.log("succes");
+                        }
+                    });
+                }
+            </script>
     {% endblock %}

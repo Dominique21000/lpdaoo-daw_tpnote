@@ -10,18 +10,51 @@ require_once 'CochonController.php';
 class SiteController {
        
     public static function afficherHomePage($req){
-        $loader = new \Twig\Loader\FilesystemLoader('View/templates');
-        $twig = new \Twig\Environment($loader, [
+        $loader = new \Twig_loader_Filesystem('View/templates');
+        $twig = new \Twig_Environment($loader, [
             'cache' => false,
         ]);
 
         echo $twig->render('index.html.twig');
     }
     
+    public static function displayOnglet1(){
+        $loader = new \Twig_loader_Filesystem('View/templates');
+        $twig = new \Twig_Environment($loader, [
+            'cache' => false,
+        ]);
+        echo $twig->render('onglet-1.html.twig');
+    }
+
+    public static function displayOnglet2(){
+        $loader = new \Twig_loader_Filesystem('View/templates');
+        $twig = new \Twig_Environment($loader, [
+            'cache' => false,
+        ]);
+        echo $twig->render('onglet-2.html.twig');
+    }
+    
+    public static function displayFirm($tabGET){
+        $loader = new \Twig_loader_Filesystem('View/templates');
+        $twig = new \Twig_Environment($loader, [
+            'cache' => false,
+        ]);
+
+        echo $twig->render('societe.html.twig',['rubrique' => $tabGET['rub']]);
+    }
+
+    public static function displayContact($tabGET){
+        $loader = new \Twig_loader_Filesystem('View/templates');
+        $twig = new \Twig_Environment($loader, [
+            'cache' => false,
+        ]);
+
+        echo $twig->render('contact.html.twig',['rubrique' => $tabGET['rub']]);
+    }
 
     public static function afficherPageConnexion($req){
-        $loader = new \Twig\Loader\FilesystemLoader('View/templates');
-        $twig = new \Twig\Environment($loader, [
+        $loader = new \Twig_Loader_Filesystem('View/templates');
+        $twig = new \Twig_Environment($loader, [
             'cache' => false,
         ]);
         echo $twig->render('admin/connexion.html.twig');
@@ -34,8 +67,8 @@ class SiteController {
         //print("dans authentification");
         //var_dump($req);
         // on prepare le renvoi
-        $loader = new \Twig\Loader\FilesystemLoader('View/templates');
-        $twig = new \Twig\Environment($loader, [
+        $loader = new \Twig_Loader_Filesystem('View/templates');
+        $twig = new \Twig_Environment($loader, [
             'cache' => false,
         ]);
 
