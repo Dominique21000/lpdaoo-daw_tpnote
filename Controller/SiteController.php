@@ -4,6 +4,8 @@
 
 require_once 'vendor/autoload.php';
 require_once 'Model/Database.php';
+require_once 'Model/CouleurBase.php';
+require_once 'Model/RaceBase.php';
 require_once 'CochonController.php';
 //use Database;
 
@@ -15,6 +17,10 @@ class SiteController {
             'cache' => false,
         ]);
 
+        // connexion à la base
+        $db = new Database();
+        $o_conn = $db->makeConnect();
+
         echo $twig->render('index.html.twig');
     }
     
@@ -23,7 +29,22 @@ class SiteController {
         $twig = new \Twig_Environment($loader, [
             'cache' => false,
         ]);
-        echo $twig->render('onglet-1.html.twig');
+
+        // connexion à la base
+        $db = new Database();
+        $o_conn = $db->makeConnect();
+
+        // on va chercher la liste des couleurs
+        $couleurs = CouleurBase::getCouleursActives($o_conn);
+
+        // on va chercher la liste des races
+        $races = RaceBase::getRacesActives($o_conn);
+
+
+
+        echo $twig->render('onglet-1.html.twig',
+                                ['couleurs' => $couleurs,
+                                   'races' => $races]);
     }
 
     public static function displayOnglet2(){

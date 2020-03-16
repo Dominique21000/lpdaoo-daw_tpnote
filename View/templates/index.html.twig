@@ -46,10 +46,10 @@
                 <div class="col-lg-12">
                     <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="categorie1-tab" data-toggle="tab" href="#categorie1" role="tab" aria-controls="categorie1" aria-selected="true">Catégorie 1</a>
+                        <a class="nav-link active" id="categorie1-tab" data-toggle="tab" href="#categorie1" role="tab" aria-controls="categorie1" aria-selected="true">CATEGORIE 1</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="categorie2-tab" data-toggle="tab" href="#categorie2" role="tab" aria-controls="categorie2" aria-selected="false">Catégorie 2</a>
+                        <a class="nav-link" id="categorie2-tab" data-toggle="tab" href="#categorie2" role="tab" aria-controls="categorie2" aria-selected="false">CATEGORIE 2</a>
                     </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
@@ -98,39 +98,6 @@
             <div class="row">
                 <div class="col-lg-12">&nbsp;<br/>&nbsp;</div>
             </div>
-            <script>
-                $(function(){
-                    $("#categorie1-tab").on("click",chargeContenu1);
-                    $("#categorie2-tab").on("click",chargeContenu2);
-                });
-
-
-                function chargeContenu1(){
-                    
-                    $.ajax({
-                    type: 'POST',
-                    url: 'index.php?rub=onglet-1',
-                    dataType: 'html',
-                    cache: false,
-                    success: function(data){
-                        $('#categorie1').html(data);
-                        //console.log("succes");
-                        }
-                    });
-                }
-
-                function chargeContenu2(){
-                    
-                    $.ajax({
-                    type: 'POST',
-                    url: 'index.php?rub=onglet-2',
-                    dataType: 'html',
-                    cache: false,
-                    success: function(data){
-                        $('#categorie2').html(data);
-                        //console.log("succes");
-                        }
-                    });
-                }
-            </script>
+            <script src="public/js/ajax.js"></script>
+            <script src="public/js/accueil.js"></script>
     {% endblock %}

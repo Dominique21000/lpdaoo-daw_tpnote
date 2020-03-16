@@ -48,9 +48,7 @@ class PhotoBase {
         $sql .= " pho_updated_at = now() ";
         $sql .= " WHERE pho_id = :id";
         $upd_pig = $db->prepare($sql);
-        //var_dump($upd_pig);
         $res = $upd_pig->execute($data);
-        //var_dump($data);
         return $res;
     }
 }

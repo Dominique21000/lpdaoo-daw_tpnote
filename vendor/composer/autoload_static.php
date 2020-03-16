@@ -7,34 +7,42 @@ namespace Composer\Autoload;
 class ComposerStaticInitcc8a486953c57e52fde0cfad8a296c2a
 {
     public static $files = array (
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'T' => 
         array (
-            'Twig\\' => 5,
+            'Twig\\Extensions\\' => 16,
         ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
-            'Symfony\\Polyfill\\Ctype\\' => 23,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Twig\\' => 
+        'Twig\\Extensions\\' => 
         array (
-            0 => __DIR__ . '/..' . '/twig/twig/src',
+            0 => __DIR__ . '/..' . '/twig/extensions/src',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Symfony\\Polyfill\\Ctype\\' => 
+    );
+
+    public static $prefixesPsr0 = array (
+        'T' => 
         array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+            'Twig_Extensions_' => 
+            array (
+                0 => __DIR__ . '/..' . '/twig/extensions/lib',
+            ),
+            'Twig_' => 
+            array (
+                0 => __DIR__ . '/..' . '/twig/twig/lib',
+            ),
         ),
     );
 
@@ -43,6 +51,7 @@ class ComposerStaticInitcc8a486953c57e52fde0cfad8a296c2a
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitcc8a486953c57e52fde0cfad8a296c2a::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitcc8a486953c57e52fde0cfad8a296c2a::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitcc8a486953c57e52fde0cfad8a296c2a::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

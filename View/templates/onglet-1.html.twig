@@ -1,1 +1,23 @@
-Contenu de l'onglet 1.
+<div class="flex-container row" style="padding-top:10px;">
+    <div class="flex-container column">
+        <form action="index.php?rub=chargerCochons" method="POST">
+            <label for="couleur">Couleur</label> :
+            <select id="couleur" name="couleur" class="flex-item">
+                {% for c in couleurs %}
+                    <option value="{{c.cou_id}}">{{c.cou_libelle}}</option>
+                {%endfor %}
+            </select>
+            <label for="race">Race</label> : 
+            <select id="race" name="race" class="flex-item">
+                {% for r in races %}
+                    <option value="{{r.rac_id}}">{{r.rac_libelle}}</option>
+                {%endfor %}
+            </select>
+        </form>
+    </div>
+    <div class="flex-container column" style="margin-left:50px;">
+        <input type="checkbox" name="femelle" id="femelle">&nbsp;<label for="femelle">Femelle</label><br/>
+        <input type="checkbox" name="male" id="male">&nbsp;<label for="male">Mâle</label>
+    </div>
+</div>
+<div class="flex-container row text-center"><input type="submit" id="submit1" class="btn btn-info"></div>
