@@ -8,6 +8,7 @@ function registre(){
 }
 include_once('Controller/SiteController.php');
 include_once('Controller/CochonController.php');
+//include_once 'Controller/PhotoController.php';
 
 spl_autoload('registre');
 
@@ -32,6 +33,20 @@ if (isset($_GET["rub"])){
         case "onglet-2":
             SiteController::displayOnglet2();
             break;
+            
+        case "charger-cochons":
+            CochonController::displayActivPigs($_POST, $_GET);
+            break;
+
+        case "details":
+            CochonController::displayDetailsPig($_GET);
+            break;
+
+            /*
+        case "galerie":
+            PhotoController::displayPicturesPig($_GET);
+            break;
+            */
 
         // la partie admin
         case "admin":

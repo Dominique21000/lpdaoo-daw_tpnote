@@ -18,8 +18,8 @@ class PhotoBase {
         
         // add a picture
         $sql = "INSERT INTO photo (";
-        $sql = $sql . " pho_id, pho_fichier, pho_titre, pho_created_at) VALUES";
-        $sql = $sql . " (:id, :fichier, :titre, NOW() );";
+        $sql = $sql . " pho_id, pho_fichier, pho_titre, pho_default, pho_created_at) VALUES";
+        $sql = $sql . " (:id, :fichier, :titre, :default,  NOW() );";
         $ajt_pig = $db->prepare($sql);
         //var_dump($ajt_pig);
         $res = $ajt_pig->execute($data);
@@ -33,7 +33,10 @@ class PhotoBase {
         $sql .= " FROM lien_cochon_photo ";
         $sql .= " INNER JOIN photo on lien_cochon_photo.lcp_pho_id = photo.pho_id ";
         $sql .= " WHERE lien_cochon_photo.lcp_coc_id = :coc_id ";
+        $sql .= " and pho_deleted_at is NULL ";
+        $sql .= " ORDER BY pho_id";
         $get_pic = $db->prepare($sql);
+
         $get_pic->execute($data);
         $res = $get_pic->fetchall();
         return $res;

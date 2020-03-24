@@ -1,4 +1,4 @@
-function formulaireContact(){
+function traiterFormulaireContact(){
     //var themes = document.getElementById('themes').options[document.getElementById('themes').selectedIndex].value;
     //console.log("themes : " + themes);
     var themes = [];

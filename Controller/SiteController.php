@@ -12,16 +12,34 @@ require_once 'CochonController.php';
 class SiteController {
        
     public static function afficherHomePage($req){
-        $loader = new \Twig_loader_Filesystem('View/templates');
-        $twig = new \Twig_Environment($loader, [
-            'cache' => false,
-        ]);
-
         // connexion à la base
         $db = new Database();
         $o_conn = $db->makeConnect();
 
-        echo $twig->render('index.html.twig');
+        // on va chercher les cochons
+        $couleur = "tous";
+        $race = "tous";
+        
+        // le caroussel
+        $cochons_carousel = CochonBase::getListeCochons($o_conn, $couleur, $race , 0, 2);      
+
+        // les derniers
+        $cochons_deniers = CochonBase::getListeCochons($o_conn, $couleur, $race , 2, 2);  
+
+        
+
+        //var_dump($cochons);
+        //var_dump($cochons_carousel);
+
+        // on créer et envoil le rendu
+        $loader = new \Twig_loader_Filesystem('View/templates');
+        $twig = new \Twig_Environment($loader, [
+            'cache' => false,
+        ]);
+        echo $twig->render('index.html.twig',
+                            ['cochons' => $cochons_deniers,
+                            'carousel' => $cochons_carousel]
+                        );
     }
     
     public static function displayOnglet1(){

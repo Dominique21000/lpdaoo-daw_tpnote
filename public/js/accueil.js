@@ -1,8 +1,3 @@
-$(function(){
-    $("#submit1").on("click",chargerCochons());
-    
+$(function(){   
+    chargerOnglet1();
 });
-
-function chargerCochons(){
-    alert("cochons");
-}

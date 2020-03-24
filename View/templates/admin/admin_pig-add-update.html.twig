@@ -23,6 +23,8 @@
     {% set sexe = "" %}
     {% set mere = "" %}
     {% set pere = "" %}
+    {% set couleur = 0 %}
+    {% set race = 0 %}
         
     {% for p in pig   %}
         {% set id = p.coc_id %}
@@ -34,6 +36,8 @@
         {% set mere = p.coc_mere_id %}
         {% set pere = p.coc_pere_id %}
         {% set description = p.coc_description %}
+        {% set couleur = p.coc_couleur_id %}
+        {% set race = p.coc_race_id %}
 
     {% endfor %}
     
@@ -64,6 +68,27 @@
         <tr>
             <th>Description</th>
             <td><textarea name="description" cols="75" resizable=true>{{description}}</textarea></td>
+        </tr>
+        <tr>
+            <th>Races</th>
+            <td>
+                <select id="race" name="race">
+                    {% for r in races %}
+                        <option value="{{r.rac_id}}" {% if r.rac_id == race %}selected{% endif %}>{{r.rac_libelle}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+         <tr>
+            <th>Couleurs</th>
+            <td>
+                <select id="couleur" name="couleur">
+                    {% for c in couleurs %}
+                        <option value="{{c.cou_id}}" {% if c.cou_id == couleur %}selected{% endif %}>{{c.cou_libelle}}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
         <tr>
             <th>Mère</th>
             <td>

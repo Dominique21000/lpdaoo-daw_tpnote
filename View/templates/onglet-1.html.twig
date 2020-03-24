@@ -1,6 +1,7 @@
+<form action="index.php?rub=charger-cochons" method="POST">
 <div class="flex-container row" style="padding-top:10px;">
     <div class="flex-container column">
-        <form action="index.php?rub=chargerCochons" method="POST">
+        
             <label for="couleur">Couleur</label> :
             <select id="couleur" name="couleur" class="flex-item">
                 {% for c in couleurs %}
@@ -13,11 +14,13 @@
                     <option value="{{r.rac_id}}">{{r.rac_libelle}}</option>
                 {%endfor %}
             </select>
-        </form>
+       
     </div>
     <div class="flex-container column" style="margin-left:50px;">
         <input type="checkbox" name="femelle" id="femelle">&nbsp;<label for="femelle">Femelle</label><br/>
         <input type="checkbox" name="male" id="male">&nbsp;<label for="male">Mâle</label>
     </div>
 </div>
-<div class="flex-container row text-center"><input type="submit" id="submit1" class="btn btn-info"></div>
+<!--<a class="btn btn-info" onClick="chargerCategorie1();" role="button" id="sub_cat1">Afficher !</a>-->
+<button class="btn btn-warning" type="submit">Button</button>
+</form>

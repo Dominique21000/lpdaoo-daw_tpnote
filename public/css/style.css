@@ -35,6 +35,7 @@ footer{
 }
 
 .slider{
+    top:0px;
     height: 400px;
 }
 
@@ -58,3 +59,20 @@ footer{
     display: table-row;
 }
 */
+
+
+.image_princ{
+    height:440px;
+}
+
+.images_second{
+    width:150px;
+}
+
+.insert{
+    top : 250px;
+    background-color: whitesmoke;
+    color: blue;
+    opacity: 0.6;
+    font-weight: bold;
+}

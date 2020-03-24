@@ -6,3 +6,4 @@ function Afficher(page){
     //console.log("nb elements : " + nb_elements);
     window.location = 'index.php?rub=admin_pig-list&sexe='+ sexe+ '&ordre='+ordre+'&sens='+sens+'&nb_epp='+nb_epp+'&page='+page;
 }
+

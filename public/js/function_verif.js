@@ -5,6 +5,5 @@ if (identifiant != undefined){
 }
 
 
-function verfirMdp() {
-    alert();
+function verfierMdp() {
 }

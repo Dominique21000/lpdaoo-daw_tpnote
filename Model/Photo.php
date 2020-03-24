@@ -12,20 +12,15 @@ class Photo
         $dest_fichier = $dest_dossier . $id;
         $tailleMaxi = 3145728; // taille maxi pour un fichier, en octets.
 
-
-        var_dump($tFile);
-
         if (isset($tFile[$nom]))
         {
-            print("ok 1 ?");
-                if ((is_uploaded_file($tFile[$nom]['tmp_name'])))
-                {
-                print("ok...");
+            if ((is_uploaded_file($tFile[$nom]['tmp_name'])))
+            {
                 // le fichier a bien été uploadé
                 $uploadOk = 1;
 
                 // verification du fichier
-                echo "Fichier uploadé avec succès.<br>";
+                //echo "Fichier uploadé avec succès.<br>";
                 // on test le type
                 if (strstr($tFile[$nom]['type'],"image") == false){
                     $uploadOk = 0;
@@ -69,7 +64,7 @@ class Photo
                 if ($fichierOk == 1){
                     if (is_uploaded_file($tFile[$nom]['tmp_name']))
                     {
-                        print("fichier téléchargé avec succès");
+                        //print("fichier téléchargé avec succès");
                     }
                     if (move_uploaded_file($tFile[$nom]['tmp_name'], $destination_complet)) {
                         echo "Le fichier " . $nom . " été correctement déplacé pour " .$destination_complet ."<br>";

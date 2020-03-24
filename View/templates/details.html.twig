@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du cochon n° {{ cochon.coc_id }}{% endblock %}
+   
+{% block content %}
+    <script>
+        $(document).ready(function(){
+            $(".group1").colorbox({rel:'group1'});
+        });
+    </script>
+
+    <div class="row">
+        <div class="col-lg-10">
+            {% for p in photos %}
+            <a 
+                class="group1"
+                href="public/img/photo/{{p.pho_fichier}}"
+                title="{{p.pho_titre}}">                
+                <img 
+                src="public/img/photo/{{p.pho_fichier}}" 
+                {% if loop.first %}
+                class="image_princ"
+                {% else %}
+                class="images_second"
+                {% endif %}
+                alt="{{p.pho_titre}}"
+            /></a>
+            {% if loop.first %}<br/>
+            {% endif %}
+        {% endfor %}
+        </div>
+        <div class="col-lg-2">
+            <h1>Cochon n° : {{ cochon.coc_id }}</h1>
+            <h2>Caractéristiques</h2>
+            Nom : {{cochon.coc_nom}}<br/>
+            Sexe : {{cochon.coc_sexe}}<br/>
+            Race : {{ cochon.rac_libelle }}<br/>
+            Couleur : {{ cochon.cou_libelle }}<br/>
+            Poids (en kg) : {{cochon.coc_poids / 1000}}<br/>
+            Date de naissance : {{cochon.coc_date_naiss|date("d/m/Y")}}<br/>
+            Durée de vie : {{cochon.coc_duree_de_vie}}<br/>
+            Mère : {{ cochon.mere }}<br/>
+            Père : {{ cochon.pere}}<br/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+        <h2>Description</h2>
+            {{ cochon.coc_description }}
+        </div>
+    </div>
+    <!--<img src="public/img/photo/{{ cochon.pho_fichier }}" class="image_princ" alt="Image principale - {{cochon.pho_titre}}"/><br/>-->
+      
+{% endblock %}
