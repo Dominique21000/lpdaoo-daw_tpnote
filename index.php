@@ -8,11 +8,8 @@ function registre(){
 }
 include_once('Controller/SiteController.php');
 include_once('Controller/CochonController.php');
-//include_once 'Controller/PhotoController.php';
 
 spl_autoload('registre');
-
-//use Controller\SiteController;
 
 if (isset($_GET["rub"])){
     $rubrique = strtolower($_GET["rub"]);
@@ -42,12 +39,7 @@ if (isset($_GET["rub"])){
             CochonController::displayDetailsPig($_GET);
             break;
 
-            /*
-        case "galerie":
-            PhotoController::displayPicturesPig($_GET);
-            break;
-            */
-
+    
         // la partie admin
         case "admin":
             SiteController::afficherPageConnexion($_GET);
