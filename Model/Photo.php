@@ -24,12 +24,12 @@ class Photo
                 // on test le type
                 if (strstr($tFile[$nom]['type'],"image") == false){
                     $uploadOk = 0;
-                    echo "Vous avez tenté d'uploadé autre chose qu'une image.<br>";
+                    //echo "Vous avez tenté d'uploadé autre chose qu'une image.<br>";
                 }
                 // on test la taille :
                 if ($tFile[$nom]['size'] > $tailleMaxi){
                     $uploadOk = 0;
-                    echo "L'image que vous avez tenté d'uploadé est trop grande.<br>";
+                    //echo "L'image que vous avez tenté d'uploadé est trop grande.<br>";
                 }
 
                 // pour l'ajout de l'extension
@@ -67,7 +67,7 @@ class Photo
                         //print("fichier téléchargé avec succès");
                     }
                     if (move_uploaded_file($tFile[$nom]['tmp_name'], $destination_complet)) {
-                        echo "Le fichier " . $nom . " été correctement déplacé pour " .$destination_complet ."<br>";
+                        //echo "Le fichier " . $nom . " été correctement déplacé pour " .$destination_complet ."<br>";
                         $fichier_svg = 1;
                     }
                     else

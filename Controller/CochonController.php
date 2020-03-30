@@ -50,8 +50,9 @@ class CochonController{
             $nb_pages = (int)($nb_total / $nb_epp); 
         }
         else{
-            $nb_pages = (int)($nb_total / $nb_epp);
+            $nb_pages = (int)($nb_total / $nb_epp) +1;
         }
+        
 
         $debut = 0;
         if ($page > 1){
@@ -60,18 +61,12 @@ class CochonController{
 
         
         $cochons = $cb->getCochonsActifs($o_conn, $sexeCochon, $ordreCochon, $sens, $nb_epp, $debut);
-
-        //return $cochons;
-        //require_once 'vendor/autoload.php';
+      
         $loader = new \Twig_Loader_Filesystem('View/templates');
         $twig = new \Twig_Environment($loader, [
             'cache' => false,
         ]);
-        //use Twig\Extensions\DateExtension;
         $twig->addExtension(new Twig_Extensions_Extension_Date());
-
-      
-      
         echo $twig->render('admin/admin_pig-list.html.twig', ['cochons' => $cochons,
                                                              'session' => $_SESSION,
                                                              'nb_cochonnes' => $nb_cochonnes,
@@ -201,7 +196,6 @@ class CochonController{
                     ':coc_id' => $id_cochon,
                     ':pho_id' => $id_photo, 
                 ); 
-                //var_dump($data_lien);
                 $n_lien = $lcpb->addLink($o_conn, $data_lien);
                                     
                 // traitement du fichier 
@@ -423,7 +417,6 @@ class CochonController{
             
             $poids = random_int(250000, 360000);
             
-
             $duree_vie = random_int(15*365, 20*365);
             
             // add of the pig in the db
@@ -434,9 +427,46 @@ class CochonController{
                         ':duree_vie' => $duree_vie, 
                         ':date_naiss' => $date_naissance,
                         ':description' => $description, 
+                        ":couleur" => 1,                    
+                        ":race" => 1,
                         ':pere' =>$pere,
                         ':mere' => $mere);
-            $retour = $cb->addPig($o_conn, $data);        
+            $retour = $cb->addPig($o_conn, $data);  
+            
+            // add of the photo
+            $pb = new PhotoBase();
+            $lcpb = new LienCochonPhotoBase();
+
+            for ($i=0; $i<5; $i++){
+                $id_photo = intval($pb->getMaxId($o_conn) +1);
+                $fichier = "imageonline-co-placeholder-image_400.jpg";
+                $titre = $i +1;
+                $default = 0; 
+                if ($i==0)
+                {
+                    $fichier = "imageonline-co-placeholder-image_750.jpg";
+                    $titre = "Principale";
+                    $default = 1;
+                }
+                $data_photo = array(
+                    ':id' => $id_photo,
+                    ':titre' => $titre,
+                    ':fichier' => $fichier,
+                    ':default' => $default,
+                );
+                $n_photo = $pb->addPicture($o_conn, $data_photo);
+
+                // lien
+               
+                $id_lien = intval($lcpb->getMaxId($o_conn) +1);
+                $data_lien = array(
+                    ':id' => $id_lien,
+                    ':coc_id' => $id_cochon,
+                    ':pho_id' => $id_photo, 
+                ); 
+                $n_lien = $lcpb->addLink($o_conn, $data_lien);
+
+            }                     
         }   
         
         // renvoi de la réponse
@@ -492,14 +522,14 @@ class CochonController{
         }
     }
 
+
+    /** displau the activ pigs */
     public static function displayActivPigs($tabPOST, $tabGET){
         $couleur = "tous";
         if (isset($_POST['couleur'])) $couleur = $_POST["couleur"];
         $race = "tous";
         if (isset($_POST['race'])) $race = $_POST["race"];
 
-
-        //$rubrique = $tabGET['rub'];
         // connexion
         $o_pdo =  new Database();
         $o_conn = $o_pdo->makeConnect();
@@ -512,8 +542,7 @@ class CochonController{
         $twig = new \Twig_Environment($loader, [
             'cache' => false,
         ]);
-        //echo "rubr : " .$rubrique;
-        
+             
         $twig->addExtension(new Twig_Extensions_Extension_Text());
 
         //var_dump($cochons);
@@ -522,6 +551,7 @@ class CochonController{
                 'rubrique' => 'cochons']);
     }
 
+    /** displau the details of a pig*/
     public static function displayDetailsPig($tabGET){
         
         $id = intval($tabGET['id']);
@@ -535,9 +565,6 @@ class CochonController{
         $photos = PhotoBase::getPictures($o_conn, 
             array(':coc_id'=>$id)
         );
-
-        //var_dump($cochon);
-        //var_dump($photos);
 
         // renvoi de la réponse
         $loader = new \Twig_Loader_Filesystem('View/templates');
